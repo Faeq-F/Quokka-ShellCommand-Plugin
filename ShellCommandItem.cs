@@ -1,19 +1,23 @@
-﻿using Quokka;
 using Quokka.ListItems;
 using Quokka.PluginArch;
+using System.Diagnostics;
+using System.Windows;
 
 namespace PluginShellCommand
 {
-  class ShellCommandItem : ListItem
+  internal sealed class ShellCommandItem : ListItem
   {
 
-    readonly bool admin;
-    readonly string command;
+    private readonly bool admin;
+    private readonly string command;
 
     public ShellCommandItem(string command, bool admin)
     {
       Name = $"Run `{command}`";
-      if (admin) Name += " with Admin Privileges";
+      if (admin)
+      {
+        Name += " with Admin Privileges";
+      }
       Description = "Run the command via PowerShell";
       Icon = IconCache.GetOrAdd(
             Environment.CurrentDirectory + "\\PlugBoard\\PluginShellCommand\\Plugin\\shell.png"
@@ -24,7 +28,7 @@ namespace PluginShellCommand
 
     public override void Execute()
     {
-      var processInfo = new System.Diagnostics.ProcessStartInfo
+      ProcessStartInfo processInfo = new()
       {
         Verb = admin ? "runas" : "",
         LoadUserProfile = true,
@@ -34,8 +38,8 @@ namespace PluginShellCommand
         UseShellExecute = true,
         CreateNoWindow = true
       };
-      System.Diagnostics.Process.Start(processInfo);
-      App.Current.MainWindow.Close();
+      Process.Start(processInfo);
+      Application.Current.MainWindow.Close();
     }
   }
 

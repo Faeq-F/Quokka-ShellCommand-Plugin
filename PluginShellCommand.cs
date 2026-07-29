@@ -14,8 +14,7 @@ namespace PluginShellCommand
   public partial class ShellCommand : Plugin
   {
 
-    private static PluginSettings pluginSettings = new();
-    internal static PluginSettings PluginSettings { get => pluginSettings; set => pluginSettings = value; }
+    internal static PluginSettings PluginSettings { get; set; } = new();
 
     /// <summary>
     /// Loads plugin settings
@@ -60,9 +59,9 @@ namespace PluginShellCommand
     {
       command ??= "";
       command = command.Substring(PluginSettings.CommandSignifier.Length);
-      if (command.Contains(PluginSettings.AdminFlag))
+      if (command.Contains(PluginSettings.AdminFlag, StringComparison.Ordinal))
       {
-        command = command.Replace(PluginSettings.AdminFlag, "");
+        command = command.Replace(PluginSettings.AdminFlag, "", StringComparison.Ordinal);
         return new Collection<ListItem>() { new ShellCommandItem(command, true) };
       }
       else
